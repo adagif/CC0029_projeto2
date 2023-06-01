@@ -13,6 +13,7 @@ Material Ruby = {{0.1745f, 0.05175f, 0.05175f, 1.0f},
                  {0.61424f, 0.04136f, 0.04136f, 1.0f},
                  {0.727811f, 0.626959f, 0.626959f, 1.0f},
                   0.2f * 128.0f};
+
 float width = 800, height = 800;
 float alpha = 0, delta = 1;
 boolean keyStates[256];
@@ -72,11 +73,9 @@ void display(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     updateMaterial(Ruby);
-    
-    glMatrixMode(GL_MODELVIEW);
-
     update();
 
+    glMatrixMode(GL_MODELVIEW);
     glViewport(0, height/2, width/2, height/2);
     glLoadIdentity();
     gluLookAt(0.0, 0.0, 2.0,
