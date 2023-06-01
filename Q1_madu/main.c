@@ -3,20 +3,32 @@
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 
+GLfloat x = 0;
+GLfloat velocidade = 0.05;
+
+void girar(){
+
+    x = x + velocidade;
+    if(x>360){
+        x = 0;
+    }
+    glutPostRedisplay();
+
+}
 void lighting(){
 
-    float position[4] = {2.0f, 2.0f, 2.0f, 1.0f};
+    float position[4] = {0.0f, 1.0f, 0.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-
+    
     glLightfv(GL_LIGHT0, GL_POSITION, position);
     glLightfv(GL_LIGHT0, GL_AMBIENT, black);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
     glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+    
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-
 
 }
 
@@ -27,9 +39,9 @@ int init(){
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0.0, 0.0, 1.0,
+    gluLookAt(0.0, 1.0, 2.0,
               0.0, 0.0, 0.0,
-              0.0, 1.0, 0.0);
+              1.0, 0.0, 0.0);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -41,9 +53,44 @@ int init(){
 void display(){
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+     
     glMatrixMode(GL_MODELVIEW);
-    glutSolidSphere(1.5, 40, 40);
-    glFlush();
+    
+    //desenha tábua da mesa
+    glPushMatrix();
+        glLoadIdentity();
+        glRotatef(x, 0, 1, 0);
+        glScalef(1, 0.25, 1);
+        glutSolidCube(1);
+        glutSwapBuffers();
+
+    glPopMatrix();
+   //desenha esfera 
+  /* glPushMatrix();
+
+    glTranslatef(-0.9, 0.0, 0.0);
+    glutSolidSphere(0.25, 40, 40);
+    glPopMatrix();
+
+    //desenha bule
+    glPushMatrix();
+    glTranslatef(0.5, 0.0, 0.0);
+    glColor3f(0.0, 1.0, 0.0);
+    glutSolidTeapot(0.5f);
+    glutSwapBuffers();
+    glPopMatrix();
+    //desenha rosquinha
+    glPushMatrix();
+    glTranslatef(0.5, -1.0, 0.0);
+    glColor3f(0.0, 0.0, 1.0); // Define a cor do torus (azul)
+    glutSolidTorus(0.1, 0.3, 40, 40); // Desenha o torus em arame
+    glPopMatrix();
+
+
+    
+
+    glFlush();*/
+   
 }
 
 int main(int argc, char** argv){
@@ -54,9 +101,12 @@ int main(int argc, char** argv){
     glutInitWindowSize(400, 400);
     glutCreateWindow("Exemplo 1 - iluminacao");
 
+
     init();
     glutDisplayFunc(display);
+    glutIdleFunc(girar);
     glutMainLoop();
+    
     return 0;
 
 
