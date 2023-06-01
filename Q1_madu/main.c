@@ -3,6 +3,28 @@
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 
+typedef struct{
+    float ka[4];
+    float kd[4];
+    float ks[4];
+    float ns;
+}Material;
+
+Material Ruby = {{0.1745f, 0.05175f, 0.05175f, 1.0f},
+                 {0.61424f, 0.04136f, 0.04136f, 1.0f},
+                 {0.727811f, 0.626959f, 0.626959f, 1.0f},
+                  0.2f * 128.0f};
+
+Material Turquoise = {{0.1f, 0.18725f,0.1745f, 1.0f},
+                 {0.396f, 0.74151f, 0.69102f, 1.0f},
+                 {0.297254f,0.30829f, 0.306678f, 1.0f},
+                 0.8f * 128.0f};
+Material White_plastic = {{0.0f, 0.0f,0.0f, 1.0f},
+                 {0.55f, 0.55f, 0.55f, 1.0f},
+                 {0.7f,0.7f, 0.7f, 1.0f},
+                 0.5f * 50.0f};
+
+
 GLfloat x = 0;
 
 void timer(int extra){
@@ -15,7 +37,7 @@ void update(){
 }
 void lighting(){
 
-    float position[4] = {2.0f, 2.0f, 2.0f, 1.0f};
+    float position[4] = {2.0f, 6.0f, 2.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     
@@ -31,7 +53,6 @@ void lighting(){
     float global_ambient[4] = {0.95f, 0.95f, 0.95f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
         
-
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
@@ -55,37 +76,32 @@ int init(){
     lighting();
 }
 
+void updateMaterial(Material material){
+    glMaterialfv(GL_FRONT, GL_AMBIENT, material.ka);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, material.kd);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, material.ks);
+    glMaterialf(GL_FRONT, GL_SHININESS, material.ns);
+}
+
 void display(){
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-     
-
-    float ka[4] = {0.1f, 0.18725f,0.1745f, 1.0f};
-    float kd[4] = {0.396f, 0.74151f, 0.69102f, 1.0f};
-    float ks[4] = {0.297254f,0.30829f, 0.306678f, 1.0f};
-    float ns = 0.8f * 128.0f;
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ka);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, kd);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, ks);
-    glMaterialf(GL_FRONT, GL_SHININESS, ns);
-
+  
     glMatrixMode(GL_MODELVIEW);
     update();
     
     //desenha tábua da mesa
     glPushMatrix();
-    
+        updateMaterial(White_plastic);
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
         glScalef(2, 0.25, 1);
         glutSolidCube(1.0f);
-       
-
     glPopMatrix();
     
    //desenha esfera 
    glPushMatrix();
+        updateMaterial(Ruby);
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
         glTranslatef(0.75, 0.27, 0.0);
@@ -94,6 +110,7 @@ void display(){
  
     //desenha bule
     glPushMatrix();
+        updateMaterial(Turquoise);
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
         glTranslatef(-0.60, 0.39, 0.0);
@@ -118,7 +135,7 @@ int main(int argc, char** argv){
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(200,0);
     glutInitWindowSize(400, 400);
-    glutCreateWindow("Exemplo 1 - iluminacao");
+    glutCreateWindow("Projeto CG 2 - Questao 2");
 
 
     init();
