@@ -17,7 +17,7 @@ void girar(){
 }
 void lighting(){
 
-    float position[4] = {0.0f, 1.0f, 0.0f, 1.0f};
+    float position[4] = {1.0f, 0.0f, 0.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     float black[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     
@@ -60,7 +60,7 @@ void display(){
     glPushMatrix();
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
-        glScalef(1, 0.25, 1);
+        glScalef(2, 0.25, 1);
         glutSolidCube(1.0f);
        
 
@@ -70,28 +70,28 @@ void display(){
    glPushMatrix();
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
-        glTranslatef(0.15, 0.37, 0.0);
-        glutSolidSphere(0.25, 40, 40);
+        glTranslatef(0.75, 0.27, 0.0);
+        glutSolidSphere(0.15, 40, 40);
     glPopMatrix();
-/* 
+ 
     //desenha bule
     glPushMatrix();
-    glTranslatef(0.5, 0.0, 0.0);
-    glColor3f(0.0, 1.0, 0.0);
-    glutSolidTeapot(0.5f);
-    glutSwapBuffers();
+        glLoadIdentity();
+        glRotatef(x, 0, 1, 0);
+        glTranslatef(-0.60, 0.39, 0.0);
+       // glColor3f(0.0, 1.0, 0.0);
+        glutSolidTeapot(0.40f);
     glPopMatrix();
+    
     //desenha rosquinha
     glPushMatrix();
-    glTranslatef(0.5, -1.0, 0.0);
-    glColor3f(0.0, 0.0, 1.0); // Define a cor do torus (azul)
-    glutSolidTorus(0.1, 0.3, 40, 40); // Desenha o torus em arame
+        glLoadIdentity();
+        glRotatef(x, 0, 1, 0);
+        glTranslatef(0.30, 0.30, 0.0);
+    // glColor3f(0.0, 0.0, 1.0); //
+        glutSolidTorus(0.05, 0.15, 40, 40);
     glPopMatrix();
 
-
-   
-
-    glFlush();*/
     glutSwapBuffers();
 }
 
