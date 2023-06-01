@@ -1,11 +1,24 @@
 #include <windows.h>
+#include <math.h>
 #include <GL/freeglut.h>
 
+typedef struct{
+    float ka[4];
+    float kd[4];
+    float ks[4];
+    float ns;
+}Material;
+
+Material Ruby = {{0.1745f, 0.05175f, 0.05175f, 1.0f},
+                 {0.61424f, 0.04136f, 0.04136f, 1.0f},
+                 {0.727811f, 0.626959f, 0.626959f, 1.0f},
+                  0.2f * 128.0f};
+float width = 800, height = 800;
 float alpha = 0, delta = 1;
 boolean keyStates[256];
+float position[4] = {5.0f, 4.0f, 5.0f, 1.0f};
 
 void lighting(){
-    float position[4] = {6.0f, 3.0f, 6.0f, 1.0f};
     float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
     float black[4] = {0.05f, 0.05f, 0.05f, 1.0f};
     
@@ -20,24 +33,14 @@ void lighting(){
 
     float global_ambient[4] = {0.95f, 0.95f, 0.95f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
-        
+
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 }
 
 int init(){
-    glClearColor(0.7f, 0.7f, 0.7f, 0.7f);
+    glClearColor(0.8f, 0.8f, 0.8f, 0.8f);
     glEnable(GL_DEPTH_TEST);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(0.0, 0.0, 2.0,
-              0.0, 0.0, 0.0,
-              0.0, 1.0, 0.0);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-4.0, 4.0, -4.0, 4.0, -4.0, 4.0);
 
     lighting();
 }
@@ -52,26 +55,71 @@ void update(){
     }
 }
 
+void desenha(){
+    glMatrixMode(GL_MODELVIEW);
+    glRotatef(alpha, 0, 1, 0);
+    glutSolidTeapot(1.5f);
+}
+
+void updateMaterial(Material material){
+    glMaterialfv(GL_FRONT, GL_AMBIENT, material.ka);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, material.kd);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, material.ks);
+    glMaterialf(GL_FRONT, GL_SHININESS, material.ns);
+}
+
 void display(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    float ka[4] = {0.1745f, 0.05175f, 0.05175f, 1.0f};
-    float kd[4] = {0.61424f, 0.04136f, 0.04136f, 1.0f};
-    float ks[4] = {0.727811f, 0.626959f, 0.626959f, 1.0f};
-    float ns = 0.2f * 128.0f;
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ka);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, kd);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, ks);
-    glMaterialf(GL_FRONT, GL_SHININESS, ns);
-
+    updateMaterial(Ruby);
+    
     glMatrixMode(GL_MODELVIEW);
 
     update();
 
+    glViewport(0, height/2, width/2, height/2);
     glLoadIdentity();
-    glRotatef(alpha, 0, 1, 0);
-    glutSolidTeapot(1.5f);
+    gluLookAt(0.0, 0.0, 2.0,
+              0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-3.0/delta, 3.0/delta, -3.0/delta, 3.0/delta, -10.0, 100.0); 
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    desenha();
+
+    glViewport(width/2, height/2, width/2, height/2);
+    glLoadIdentity();
+    gluLookAt(2.0, 0.0, 0.0,
+              0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-3.0/delta, 3.0/delta, -3.0/delta, 3.0/delta, -10.0, 100.0);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    desenha();
+    
+    glViewport(0, 0, width/2, height/2);
+    glLoadIdentity();
+    gluLookAt(0.0, 2.0, 0.0,
+              0.0, 0.0, 0.0,
+              0.0, 0.0, -1.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-3.0/delta, 3.0/delta, -3.0/delta, 3.0/delta, -10.0, 100.0); 
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    desenha();
+
+    glViewport(width/2, 0, width/2, height/2);
+    glLoadIdentity ();
+    gluLookAt(3.0, 2.5, 6.0,
+              0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(atan(tan(50.0 * 3.14159 / 360.0) / delta) * 360.0 / 3.14159, 1, 0.1, 100.0);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    desenha();
 
     glutSwapBuffers();
 }
@@ -93,8 +141,8 @@ int main(int argc, char** argv){
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(200, 0);
-    glutInitWindowSize(400, 400);
-    glutCreateWindow("Projeto CG 2 - Questão 2");
+    glutInitWindowSize(width, height);
+    glutCreateWindow("Projeto CG 2 - Questao 2");
 
     init();
 
