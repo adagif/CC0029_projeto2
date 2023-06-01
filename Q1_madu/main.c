@@ -39,7 +39,7 @@ int init(){
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0.0, 1.0, 2.0,
+    gluLookAt(0.0, 0.0, 2.0,
               0.0, 0.0, 0.0,
               1.0, 0.0, 0.0);
 
@@ -61,17 +61,19 @@ void display(){
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
         glScalef(1, 0.25, 1);
-        glutSolidCube(1);
-        glutSwapBuffers();
+        glutSolidCube(1.0f);
+       
 
     glPopMatrix();
+    
    //desenha esfera 
-  /* glPushMatrix();
-
-    glTranslatef(-0.9, 0.0, 0.0);
-    glutSolidSphere(0.25, 40, 40);
+   glPushMatrix();
+        glLoadIdentity();
+        glRotatef(x, 0, 1, 0);
+        glTranslatef(0.15, 0.37, 0.0);
+        glutSolidSphere(0.25, 40, 40);
     glPopMatrix();
-
+/* 
     //desenha bule
     glPushMatrix();
     glTranslatef(0.5, 0.0, 0.0);
@@ -87,10 +89,10 @@ void display(){
     glPopMatrix();
 
 
-    
+   
 
     glFlush();*/
-   
+    glutSwapBuffers();
 }
 
 int main(int argc, char** argv){
