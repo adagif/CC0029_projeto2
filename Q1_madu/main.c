@@ -4,16 +4,14 @@
 #include <GL/gl.h>
 
 GLfloat x = 0;
-GLfloat velocidade = 0.05;
 
-void girar(){
-
-    x = x + velocidade;
-    if(x>360){
-        x = 0;
-    }
+void timer(int extra){
     glutPostRedisplay();
+    glutTimerFunc(15, timer, 0);
+}
 
+void update(){
+    x = x + 1;
 }
 void lighting(){
 
@@ -73,6 +71,7 @@ void display(){
     glMaterialf(GL_FRONT, GL_SHININESS, ns);
 
     glMatrixMode(GL_MODELVIEW);
+    update();
     
     //desenha tábua da mesa
     glPushMatrix();
@@ -116,7 +115,7 @@ void display(){
 int main(int argc, char** argv){
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(200,0);
     glutInitWindowSize(400, 400);
     glutCreateWindow("Exemplo 1 - iluminacao");
@@ -124,7 +123,7 @@ int main(int argc, char** argv){
 
     init();
     glutDisplayFunc(display);
-    glutIdleFunc(girar);
+    glutTimerFunc(0, timer, 0);
     glutMainLoop();
     
     return 0;
