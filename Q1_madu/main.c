@@ -10,6 +10,11 @@ typedef struct{
     float ns;
 }Material;
 
+Material yellow_rubber = {{0.05f, 0.05f, 0.0f, 1.0f},
+                 {0.5f, 0.5f, 0.4f, 1.0f},
+                 {0.7f, 0.7f, 0.4f, 1.0f},
+                   0.5f * 50.0f };
+
 Material Ruby = {{0.1745f, 0.05175f, 0.05175f, 1.0f},
                  {0.61424f, 0.04136f, 0.04136f, 1.0f},
                  {0.727811f, 0.626959f, 0.626959f, 1.0f},
@@ -33,7 +38,7 @@ GLfloat x = 0;
 
 void timer(int extra){
     glutPostRedisplay();
-    glutTimerFunc(15, timer, 0);
+    glutTimerFunc(5, timer, 0);
 }
 
 void update(){
@@ -94,7 +99,7 @@ void display(){
     glMatrixMode(GL_MODELVIEW);
     update();
     
-    //desenha tábua da mesa
+    //superfície
     glPushMatrix();
         updateMaterial(White_plastic);
         glLoadIdentity();
@@ -102,7 +107,7 @@ void display(){
         glScalef(2, 0.25, 1);
         glutSolidCube(1.0f);
     glPopMatrix();
-    
+
    //desenha esfera 
    glPushMatrix();
         updateMaterial(Ruby);
@@ -132,11 +137,11 @@ void display(){
 
     //desenha parede
     glPushMatrix();
-        updateMaterial(White_plastic);
+        updateMaterial(yellow_rubber);
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
-        glScalef(4.5, 6.0, -0.1);
-        glTranslatef(0.1, -0.01, 7.0);
+        glScalef(4.0, 6.0, -0.1);
+        glTranslatef(-0.002, -0.01, 5.0);
         glutSolidCube(0.5f);
     glPopMatrix();
     glutSwapBuffers();
@@ -149,7 +154,7 @@ int main(int argc, char** argv){
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(200,0);
     glutInitWindowSize(400, 400);
-    glutCreateWindow("Projeto CG 2 - Questao 2");
+    glutCreateWindow("Projeto CG 2 - Questao 1");
 
 
     init();
