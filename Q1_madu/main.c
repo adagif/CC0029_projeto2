@@ -23,6 +23,10 @@ Material White_plastic = {{0.0f, 0.0f,0.0f, 1.0f},
                  {0.55f, 0.55f, 0.55f, 1.0f},
                  {0.7f,0.7f, 0.7f, 1.0f},
                  0.5f * 50.0f};
+Material gold = {{0.24725f, 0.1995f,0.0745f, 1.0f},
+                 {0.75164f, 0.60648f, 0.22648f, 1.0f},
+                 {0.628281f,0.555802f,0.366065f, 1.0f},
+                 0.4f * 50.0f};
 
 
 GLfloat x = 0;
@@ -71,7 +75,7 @@ int init(){
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-2.0, 2.0, -2.0, 2.0, -2.0, 2.0);
+    glOrtho(-2.0, 2.0, -2.0, 2.0, -20.0, 20.0);
 
     lighting();
 }
@@ -119,12 +123,22 @@ void display(){
     
     //desenha rosquinha
     glPushMatrix();
+        updateMaterial(gold);
         glLoadIdentity();
         glRotatef(x, 0, 1, 0);
         glTranslatef(0.30, 0.30, 0.0);
         glutSolidTorus(0.05, 0.15, 40, 40);
     glPopMatrix();
 
+    //desenha parede
+    glPushMatrix();
+        updateMaterial(White_plastic);
+        glLoadIdentity();
+        glRotatef(x, 0, 1, 0);
+        glScalef(4.5, 6.0, -0.1);
+        glTranslatef(0.1, -0.01, 7.0);
+        glutSolidCube(0.5f);
+    glPopMatrix();
     glutSwapBuffers();
 
 }
