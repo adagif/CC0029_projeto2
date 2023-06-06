@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/freeglut.h>
@@ -38,7 +39,7 @@ GLfloat x = 0;
 
 void timer(int extra){
     glutPostRedisplay();
-    glutTimerFunc(5, timer, 0);
+    glutTimerFunc(15, timer, 0);
 }
 
 void update(){
@@ -71,6 +72,7 @@ int init(){
 
     glClearColor(0.7f, 0.7f, 0.7f, 0.7f);
     glEnable(GL_DEPTH_TEST);
+    lighting();
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -82,7 +84,6 @@ int init(){
     glLoadIdentity();
     glOrtho(-2.0, 2.0, -2.0, 2.0, -20.0, 20.0);
 
-    lighting();
 }
 
 void updateMaterial(Material material){
